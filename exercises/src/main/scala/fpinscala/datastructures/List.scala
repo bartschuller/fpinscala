@@ -47,15 +47,33 @@ object List { // `List` companion object. Contains functions for creating and wo
     foldRight(ns, 1.0)(_ * _) // `_ * _` is more concise notation for `(x,y) => x * y`; see sidebar
 
 
-  def tail[A](l: List[A]): List[A] = sys.error("todo")
+  def tail[A](l: List[A]): List[A] =
+  l match {
+    case Nil => sys.error("tail of an empty list")
+    case Cons(_, t) => t
+  }
 
-  def setHead[A](l: List[A], h: A): List[A] = sys.error("todo")
+  def setHead[A](l: List[A], h: A): List[A] = Cons(h, tail(l))
 
-  def drop[A](l: List[A], n: Int): List[A] = sys.error("todo")
+  def drop[A](l: List[A], n: Int): List[A] =
+  if (n <= 0)
+    l
+  else
+    drop(tail(l), n - 1)
 
-  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = sys.error("todo")
+  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match {
+    case Cons(h, t) if f(h) => dropWhile(t, f)
+    case _ => l
+  }
 
-  def init[A](l: List[A]): List[A] = sys.error("todo")
+  def init[A](l: List[A]): List[A] = {
+    def initLoop[A](l: List[A], r: List[A]): List[A] = l match {
+      case Cons(h, t@Cons(_, _)) => initLoop(t, Cons(h, r))
+      case _ => r
+    }
+
+    initLoop(l, Nil)
+  }
 
   def length[A](l: List[A]): Int = sys.error("todo")
 
