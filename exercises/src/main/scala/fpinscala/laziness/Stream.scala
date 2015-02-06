@@ -46,5 +46,7 @@ object Stream {
   val ones: Stream[Int] = Stream.cons(1, ones)
   def from(n: Int): Stream[Int] = sys.error("todo")
 
-  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = sys.error("todo")
+  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] =
+    f(z).map(as=> Stream.cons(as._1, unfold(as._2)(f))).getOrElse(Stream.empty)
+
 }
